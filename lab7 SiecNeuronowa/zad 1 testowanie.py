@@ -68,12 +68,44 @@ ax[1].legend()
 
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)
 accs = []
+activationsFunctions = ['relu','softmax','softsign','elu','selu']
+licznik=0
 scaler = StandardScaler()
 for train_index, test_index in KFold(5).split(X_train):
     X_train_cv = X_train[train_index,:]
     X_test_cv = X_train[test_index,:]
     y_train_cv = y_train[train_index,:]
     y_test_cv = y_train[test_index,:]
+
     X_train_cv = scaler.fit_transform(X_train_cv)
     X_test_cv = scaler.transform(X_test_cv)
-    model.fit(X_train, y_train, batch_size=32,epochs=10, validation_data=(X_test, y_test),verbose=2)
+    model = Sequential()
+    model.add(Input(shape=X_train_cv.shape[1:]))
+    model.add(Dense(64,activation=activationsFunctions[licznik]))
+    model.add(Dense(64,activation=activationsFunctions[licznik]))
+    model.add(Dense(64,activation=activationsFunctions[licznik]))
+    model.add(Dense(class_num, activation='softmax'))
+    model.compile(optimizer= Adam(learning_rate),loss='categorical_crossentropy',metrics=(['accuracy']))
+    model.fit(X_train_cv,y_train_cv, batch_size=32, epochs=100, validation_data=(X_test_cv,y_test_cv), verbose=2)
+    historia = model.history.history
+    floss_train = historia['loss']
+    floss_test = historia['val_loss']
+    acc_train = historia['accuracy']
+    acc_test = historia['val_accuracy']
+    fig,ax = plt.subplots(1,2, figsize=(20,10))
+    epochs = np.arange(0, 100)
+    ax[0].plot(epochs, floss_train, label = 'floss_train')
+    ax[0].plot(epochs, floss_test, label = 'floss_test')
+    ax[0].set_title('Funkcje strat')
+    ax[0].legend()
+    ax[1].set_title('Dokladnosci')
+    ax[1].plot(epochs, acc_train, label = 'acc_train')
+    ax[1].plot(epochs, acc_test, label = 'acc_test')
+    ax[1].legend()
+
+    loss, accuracy = model.evaluate(X_test_cv, y_test_cv, verbose=0)
+    print(f"Loss dla {activationsFunctions[licznik]}: {loss:.4f}")
+    print(f"Accuracy: {accuracy * 100:.2f} %")
+    licznik+=1
+              
+

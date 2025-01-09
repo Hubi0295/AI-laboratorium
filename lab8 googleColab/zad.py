@@ -49,7 +49,7 @@ for i in range(repeat_num):
 model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer= Adam(learning_rate),loss='binary_crossentropy',metrics=['accuracy', 'Recall', 'Precision'])
 
-epochs = 1000
+epochs = 100
 model.fit(
     X_train, y_train,
     validation_data=(X_test, y_test),
@@ -57,7 +57,7 @@ model.fit(
     batch_size=32
 )
 
-def plot_model_metrics(model, epochs=1000):
+def plot_model_metrics(model, epochs=100):
       historia = model.history.history
       floss_train = historia['loss']
       floss_test = historia['val_loss']
