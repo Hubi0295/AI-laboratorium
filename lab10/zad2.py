@@ -75,7 +75,7 @@ def show_pictures(arrs):
     return fig
 
 
-from keras import backend as K
+from lab11.keras1 import backend as K
 from keras.api.layers import Lambda
 import tensorflow as tf
 
