@@ -2,12 +2,9 @@ from keras.api.layers import Conv2D, Flatten, Dense, Input
 from keras.api.models import Sequential
 from keras.api.optimizers import Adam, SGD, Nadam
 from keras.api.datasets import mnist
-
 from keras.api.layers import AveragePooling2D, MaxPooling2D
-
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colormaps
